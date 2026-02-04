@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="https://resources.services.kekkotech.com/img/kekkotech/favicon.ico" type="image/x-icon">
     <style>
-        /* CSS ORIGINALE INALTERATO */
+
         * { box-sizing: border-box; user-select: none; }
         html { height: 100%; }
         body {
@@ -110,7 +110,6 @@
     </div>
 
     <script>
-        // RECUPERO PARAMETRI DALL'URL
         const params = new URLSearchParams(window.location.search);
         const SUPABASE_URL = params.get('s_url');
         const SUPABASE_KEY = params.get('s_key');
@@ -119,7 +118,6 @@
         const msg = document.getElementById('msg');
         document.getElementById('year').innerText = new Date().getFullYear();
 
-        // UTILI
         function switchTab(t) {
             const c = document.getElementById('tabs_c');
             const ts = document.querySelectorAll('.tab');
