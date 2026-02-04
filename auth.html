@@ -193,8 +193,28 @@
             if(!email) return showErr("Inserisci email.");
             setLoading(true, "Invio link...");
             try {
-                await supabaseRequest('otp', 'POST', { email, create_user: false });
-                setLoading(false); showErr("Magic link inviato!", true);
+                // Aggiunto type e redirect_to
+                await supabaseRequest('otp', 'POST', { 
+                    email, 
+                    type: 'magiclink', 
+                    create_user: true,
+                    redirect_to: REDIRECT_URI 
+                });
+                setLoading(false); showErr("Magic link inviato! Controlla l'email.", true);
+            } catch(e) { setLoading(false); showErr(e.message); }
+        }
+
+        async function doReset() {
+            const email = document.getElementById('l_email').value.trim();
+            if(!email) return showErr("Inserisci email.");
+            setLoading(true, "Invio email...");
+            try {
+                // Aggiunto redirect_to
+                await supabaseRequest('recover', 'POST', { 
+                    email, 
+                    redirect_to: REDIRECT_URI 
+                });
+                setLoading(false); showErr("Email di recupero inviata!", true);
             } catch(e) { setLoading(false); showErr(e.message); }
         }
 
