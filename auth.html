@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth - KekkoTech ID</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://resources.services.kekkotech.com/img/kekkotech/favicon.ico" type="image/x-icon">
+    <style>
+        /* CSS ORIGINALE INALTERATO */
+        * { box-sizing: border-box; user-select: none; }
+        html { height: 100%; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            overflow-x: hidden;
+            color: white;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -2;
+            background: #0f2027;
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.6; animation: float 10s infinite alternate; }
+        .orb-1 { width: 300px; height: 300px; background: #f1c40f; top: 10%; left: 10%; }
+        .orb-2 { width: 250px; height: 250px; background: #e74c3c; bottom: 10%; right: 10%; animation-delay: -5s; }
+        @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 50px); } }
+        .glass-card {
+            position: relative; z-index: 10;
+            width: 90%; max-width: 380px;
+            margin: 20px 0; 
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px; padding: 30px 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center; display: flex; flex-direction: column; align-items: center;
+            flex-shrink: 0; 
+        }
+        .logo-img { max-width: 180px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); transition: transform 0.3s; }
+        h2 { margin: 0 0 5px 0; font-weight: 700; font-size: 20px; letter-spacing: 0.5px; }
+        .subtitle { font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 20px; font-weight: 300; }
+        .tabs-container { background: rgba(0,0,0,0.2); padding: 4px; border-radius: 50px; display: flex; position: relative; margin-bottom: 20px; width: 100%; border: 1px solid rgba(255,255,255,0.05); }
+        .tab { flex: 1; text-align: center; padding: 8px 0; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); cursor: pointer; position: relative; z-index: 2; transition: color 0.3s; }
+        .tab.active { color: #111; }
+        .tab-slider { position: absolute; top: 4px; left: 4px; bottom: 4px; width: calc(50% - 4px); background: #f1c40f; border-radius: 50px; z-index: 1; transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); box-shadow: 0 2px 10px rgba(241, 196, 15, 0.4); }
+        .tabs-container.right-active .tab-slider { transform: translateX(100%); }
+        .form-section { width: 100%; display: none; animation: fadeIn 0.4s ease forwards; }
+        .form-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .input-group { position: relative; margin-bottom: 12px; }
+        input { width: 100%; padding: 12px 15px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 13px; outline: none; font-family: 'Poppins', sans-serif; transition: all 0.3s; }
+        .btn-primary { width: 100%; padding: 12px; background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); border: none; border-radius: 12px; color: #111; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 5px; box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3); text-transform: uppercase; }
+        .btn-google { width: 100%; padding: 10px; background: #fff; color: #333; border: none; border-radius: 12px; font-weight: 600; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-bottom: 15px; }
+        .divider { display: flex; align-items: center; width: 100%; margin: 15px 0; color: rgba(255,255,255,0.4); font-size: 10px; text-transform: uppercase; }
+        .divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .divider::before { margin-right: 10px; } .divider::after { margin-left: 10px; }
+        .link-btn { background: none; border: none; color: #f1c40f; font-size: 11px; cursor: pointer; text-decoration: underline; opacity: 0.8; }
+        .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); width: 100%; padding: 10px; margin-top: 10px; border-radius: 12px; font-size: 10px; cursor: pointer; }
+        .err-msg { color: #ff6b6b; font-size: 11px; margin-top: 10px; min-height: 16px; font-weight: 500; }
+        .privacy-link { margin-top: 20px; font-size: 10px; color: rgba(255,255,255,0.2); cursor: pointer; }
+        .row { display: flex; gap: 8px; }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="glass-card">
+        <img src="https://resources.services.kekkotech.com/img/id/authlogo.png" class="logo-img">
+        <h2>KekkoTech ID</h2>
+        <div class="subtitle">Un ID unico per tutto il mondo KekkoTech</div>
+        <button class="btn-google" onclick="doGoogle()">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="16"> Accedi con Google
+        </button>
+        <div class="divider">oppure</div>
+        <div class="tabs-container" id="tabs_c">
+            <div class="tab-slider"></div>
+            <div class="tab active" onclick="switchTab('login')">ACCEDI</div>
+            <div class="tab" onclick="switchTab('register')">REGISTRATI</div>
+        </div>
+        <div id="login-form" class="form-section active">
+            <div class="input-group"><input type="email" id="l_email" placeholder="Indirizzo Email"></div>
+            <div class="input-group"><input type="password" id="l_pass" placeholder="Password"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:5px;">
+                <button class="link-btn" onclick="doReset()">Recupera Password</button>
+            </div>
+            <button class="btn-primary" onclick="doLogin()">ENTRA</button>
+            <button class="btn-ghost" style="border:none; color:#f1c40f;" onclick="doMagicLink()">✨ Invia Magic Link</button>
+        </div>
+        <div id="register-form" class="form-section">
+            <div class="row"><input type="text" id="r_name" placeholder="Nome"><input type="text" id="r_surname" placeholder="Cognome"></div>
+            <div class="input-group" style="margin-top:12px;"><input type="email" id="r_email" placeholder="Email"></div>
+            <div class="input-group"><input type="password" id="r_pass" placeholder="Password (min 6 car.)"></div>
+            <button class="btn-primary" onclick="doRegister()">CREA ACCOUNT</button>
+        </div>
+        <div class="err-msg" id="msg"></div>
+        <button class="btn-ghost" onclick="skipLogin()">CONTINUA COME OSPITE</button>
+        <a class="privacy-link" onclick="openPrivacy()">Privacy Policy & Termini</a>
+        <div style="margin-top: 15px; font-size: 10px; color: rgba(255,255,255,0.2); text-align: center; width: 100%;">
+            &copy; <span id="year"></span> KekkoTech Softwares
+        </div>
+    </div>
+
+    <script>
+        // RECUPERO PARAMETRI DALL'URL
+        const params = new URLSearchParams(window.location.search);
+        const SUPABASE_URL = params.get('s_url');
+        const SUPABASE_KEY = params.get('s_key');
+        const REDIRECT_URI = "kts-vscoreboard://auth/callback";
+
+        const msg = document.getElementById('msg');
+        document.getElementById('year').innerText = new Date().getFullYear();
+
+        // UTILI
+        function switchTab(t) {
+            const c = document.getElementById('tabs_c');
+            const ts = document.querySelectorAll('.tab');
+            if(t === 'register') {
+                c.classList.add('right-active'); ts[0].classList.remove('active'); ts[1].classList.add('active');
+                document.getElementById('login-form').classList.remove('active'); document.getElementById('register-form').classList.add('active');
+            } else {
+                c.classList.remove('right-active'); ts[1].classList.remove('active'); ts[0].classList.add('active');
+                document.getElementById('register-form').classList.remove('active'); document.getElementById('login-form').classList.add('active');
+            }
+            msg.innerText = '';
+        }
+
+        function showErr(t, isSuccess = false) { 
+            msg.innerText = t; 
+            msg.style.color = isSuccess ? "#2ecc71" : "#ff6b6b"; 
+        }
+
+        function setLoading(a, t) { 
+            const bs = document.querySelectorAll('button'); 
+            bs.forEach(b => b.disabled = a); 
+            msg.innerText = a ? t : ""; 
+            msg.style.color = "#f1c40f"; 
+        }
+
+        async function supabaseRequest(endpoint, method, body) {
+            if(!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Configurazione mancante.");
+            const res = await fetch(`${SUPABASE_URL}/auth/v1/${endpoint}`, {
+                method: method,
+                headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if(!res.ok) throw new Error(data.error_description || data.msg || "Errore API");
+            return data;
+        }
+
+        // LOGICA FUNZIONALE
+        async function doLogin() {
+            const email = document.getElementById('l_email').value.trim();
+            const password = document.getElementById('l_pass').value.trim();
+            if(!email || !password) return showErr("Inserisci credenziali.");
+            
+            setLoading(true, "Accesso...");
+            try {
+                const data = await supabaseRequest('token?grant_type=password', 'POST', { email, password });
+                window.location.href = `${REDIRECT_URI}#access_token=${data.access_token}&refresh_token=${data.refresh_token}`;
+            } catch(e) { setLoading(false); showErr(e.message); }
+        }
+
+        async function doRegister() {
+            const name = document.getElementById('r_name').value.trim();
+            const surname = document.getElementById('r_surname').value.trim();
+            const email = document.getElementById('r_email').value.trim();
+            const pass = document.getElementById('r_pass').value.trim();
+            if(!name || !surname || !email || !pass) return showErr("Dati mancanti.");
+
+            setLoading(true, "Registrazione...");
+            try {
+                await supabaseRequest('signup', 'POST', { email, password: pass, data: { first_name: name, last_name: surname } });
+                setLoading(false);
+                showErr("Controlla la tua email per confermare l'account!", true);
+            } catch(e) { setLoading(false); showErr(e.message); }
+        }
+
+        function doGoogle() {
+            if(!SUPABASE_URL) return showErr("Errore configurazione.");
+            window.location.href = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(REDIRECT_URI)}`;
+        }
+
+        async function doMagicLink() {
+            const email = document.getElementById('l_email').value.trim();
+            if(!email) return showErr("Inserisci email.");
+            setLoading(true, "Invio link...");
+            try {
+                await supabaseRequest('otp', 'POST', { email, create_user: false });
+                setLoading(false); showErr("Magic link inviato!", true);
+            } catch(e) { setLoading(false); showErr(e.message); }
+        }
+
+        async function doReset() {
+            const email = document.getElementById('l_email').value.trim();
+            if(!email) return showErr("Inserisci email.");
+            setLoading(true, "Invio email recupero...");
+            try {
+                await supabaseRequest('recover', 'POST', { email });
+                setLoading(false); showErr("Email di recupero inviata!", true);
+            } catch(e) { setLoading(false); showErr(e.message); }
+        }
+
+        function skipLogin() {
+            window.location.href = "kts-vscoreboard://skip";
+        }
+
+        function openPrivacy() {
+            window.open('https://id.kekkotech.com/privacy', '_blank');
+        }
+    </script>
+</body>
+</html>
