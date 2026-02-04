@@ -193,16 +193,23 @@
             const email = document.getElementById('l_email').value.trim();
             if(!email) return showErr("Inserisci email.");
             setLoading(true, "Invio link...");
+            
             try {
-                // Aggiunto type e redirect_to
-                await supabaseRequest('otp', 'POST', { 
+                // COSTRUZIONE URL: aggiungiamo il redirect qui, non nel body
+                const endpoint = `otp?redirect_to=${encodeURIComponent(REDIRECT_URI)}`;
+                
+                await supabaseRequest(endpoint, 'POST', { 
                     email, 
                     type: 'magiclink', 
-                    create_user: true,
-                    redirect_to: REDIRECT_URI 
+                    create_user: true
                 });
-                setLoading(false); showErr("Magic link inviato! Controlla l'email.", true);
-            } catch(e) { setLoading(false); showErr(e.message); }
+                
+                setLoading(false); 
+                showErr("Magic link inviato! Controlla la tua email.", true);
+            } catch(e) { 
+                setLoading(false); 
+                showErr(e.message); 
+            }
         }
 
         async function doReset() {
