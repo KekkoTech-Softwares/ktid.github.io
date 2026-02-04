@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>404 Pagina non trovata - KekkoTech ID</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="https://resources.services.kekkotech.com/img/kekkotech/favicon.ico">
+    <style>
+        /* CSS STRUTTURALE */
+        * { box-sizing: border-box; -webkit-user-select: none; user-select: none;}
+        body {
+            background: #0f2027;
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+            font-family: 'Poppins', sans-serif;
+            height: 100vh; margin: 0; padding: 0;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; color: white;
+        }
+
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.6; animation: float 10s infinite alternate; }
+        .orb-1 { width: 340px; height: 340px; background: #f1c40f; top: 18%; left: 28%; }
+        .orb-2 { width: 300px; height: 300px; background: #e74c3c; bottom: 18%; right: 28%; animation-delay: -5s; }
+        
+        @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 30px); } }
+        
+        .glass-card {
+            position: relative; z-index: 10;
+            width: 90%; max-width: 420px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            padding: 45px 35px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* ZOOM SPECIFICO SUL LOGO */
+        .logo-img { 
+            max-width: 200px; 
+            height: auto; 
+            margin-bottom: 25px; 
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Effetto morbido */
+            cursor: pointer;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.08); /* Zoom dell'8% */
+        }
+
+        h2 { margin: 0 0 5px 0; font-weight: 700; font-size: 22px; letter-spacing: 0.5px; }
+        .subtitle { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 30px; font-weight: 300; }
+        
+        .error-container {
+            width: 100%; background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px; padding: 18px; margin-bottom: 30px;
+        }
+        .error-text {
+            color: #ff7675; font-size: 12px; font-family: 'Courier New', monospace;
+            word-break: break-word; line-height: 1.4;
+        }
+
+        .btn-primary {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+            border: none; border-radius: 15px;
+            color: #111; font-weight: 700; font-size: 14px;
+            cursor: pointer; box-shadow: 0 5px 20px rgba(243, 156, 18, 0.3);
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;
+        }
+        .btn-primary:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+        .copyright { position: absolute; bottom: 20px; font-size: 10px; color: rgba(255,255,255,0.25); }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="glass-card">
+        <img src="https://resources.services.kekkotech.com/img/id/authlogo.png" class="logo-img" alt="KekkoTech Logo">
+        
+        <h2>KekkoTech ID</h2>
+        <div class="subtitle">Pagina non trovata</div>
+
+        <div class="error-container">
+            <div class="error-text" id="error-msg">
+                Analisi parametri di autenticazione...
+            </div>
+        </div>
+
+        <button class="btn-primary" id="back-btn" onclick="goBack(event)">TORNA AL LOGIN</button>
+
+        <div class="copyright">© 2026 KekkoTech</div>
+    </div>
+
+    <script>
+        const isElectron = navigator.userAgent.toLowerCase().includes('electron');
+        
+        let ipcRenderer = null;
+        if (isElectron) {
+            try {
+                ipcRenderer = require('electron').ipcRenderer;
+            } catch (e) {
+                console.warn("Ambiente Electron rilevato ma require() fallito.");
+            }
+        }
+
+        function goBack(event) {
+            if (event) event.stopPropagation();
+            
+            const params = new URLSearchParams(window.location.search);
+            const redirectTo = params.get('redirect_to');
+
+            if (redirectTo) {
+                window.location.href = redirectTo;
+                return;
+            } 
+
+            if (isElectron && ipcRenderer) {
+                ipcRenderer.send('request_login_screen');
+            } else {
+                window.location.href = "https://id.kekkotech.com/auth";
+            }
+        }
+
+        function getErrorInfo() {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash || window.location.search);
+            
+            let desc = params.get('error_description');
+            let code = params.get('error');
+
+            const msgDiv = document.getElementById('error-msg');
+            if (desc) {
+                msgDiv.innerText = decodeURIComponent(desc.replace(/\+/g, ' '));
+            } else if (code) {
+                msgDiv.innerText = "SISTEMA: " + code;
+            } else {
+                msgDiv.innerText = "404 Pagina non trovata.";
+            }
+        }
+
+        window.onload = getErrorInfo;
+    </script>
+</body>
+</html>
