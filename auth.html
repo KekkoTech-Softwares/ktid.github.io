@@ -114,6 +114,7 @@
         const SUPABASE_URL = params.get('s_url');
         const SUPABASE_KEY = params.get('s_key');
         const REDIRECT_URI = "kts-vscoreboard://auth/callback";
+        const SERVICE = params.get('service');
 
         const msg = document.getElementById('msg');
         document.getElementById('year').innerText = new Date().getFullYear();
@@ -229,7 +230,12 @@
         }
 
         function skipLogin() {
-            window.location.href = "kts-vscoreboard://skip";
+            // Logica richiesta: mandiamo all'app solo se il servizio è quello giusto
+            if (SERVICE === "vscoreboard") {
+                window.location.href = "kts-vscoreboard://skip";
+            } else {
+                showErr("Accesso ospite non disponibile dal browser.");
+            }
         }
 
         function openPrivacy() {
