@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OAuth Consent - KekkoTech ID</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="https://resources.services.kekkotech.com/img/kekkotech/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="glass-card">
+    <img src="https://resources.services.kekkotech.com/img/id/authlogo.png" class="logo-img">
+    <h2>Autorizzazione</h2>
+    <div class="subtitle">Conferma l’accesso con il tuo KekkoTech ID</div>
+
+    <div class="box">
+      <div class="label">Applicazione</div>
+      <div class="value" id="clientName">Caricamento...</div>
+    </div>
+
+    <div class="box">
+      <div class="label">Permessi richiesti</div>
+      <ul id="scopes"></ul>
+    </div>
+
+    <div class="row">
+      <button class="btn-ghost" id="denyBtn">NEGA</button>
+      <button class="btn-primary" id="approveBtn">APPROVA</button>
+    </div>
+
+    <div class="err-msg" id="err"></div>
+    <div class="ok-msg" id="ok"></div>
+
+    <div class="bottom-links">
+      <button class="link-btn" id="logoutBtn">Cambia account</button>
+    </div>
+
+    <div class="footer">
+      &copy; <span id="year"></span> KekkoTech - Tutti i diritti riservati.
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./index.js"></script>
+</body>
+</html>
